@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="tasktypelist">
+    <item>Compute Pi</item>
+    <item>Something fun</item>
+    <item>Something heavy</item>
+</string-array>
+</resources>

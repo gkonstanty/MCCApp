@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MCCApp</string>
+    <string name="taskpi_help_points">Enter points to sample</string>
 </resources>
