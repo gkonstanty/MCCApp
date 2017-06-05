@@ -104,6 +104,14 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
             }
         });
 
+        Task task = list.get(position);
+        if (task.isDone()){
+            buttonPredict.setEnabled(false);
+//            Log.d(TAG, "task: " + task.getId() + "is DONE!!!!!");
+//        } else {
+//            Log.d(TAG, "task: " + task.getId() + "is not DONE");
+        }
+
         return view;
     }
 
@@ -117,10 +125,13 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
                 Long server_id = Long.parseLong(taskCursor.getString(
                         taskCursor.getColumnIndexOrThrow(MccDBContract.TaskEntry.SERVER_ID)
                 ));
-//                boolean isDone = Boolean.parseBoolean(taskCursor.getString(
-//                        taskCursor.getColumnIndexOrThrow(MccDBContract.TaskEntry.DONE)
-//                ));
+                String isDoneStr = taskCursor.getString(
+                        taskCursor.getColumnIndexOrThrow(MccDBContract.TaskEntry.DONE)
+                );
                 boolean isDone = false;
+                if (isDoneStr != null && isDoneStr.equals("1")){
+                    isDone = true;
+                }
                 String result = taskCursor.getString(
                         taskCursor.getColumnIndexOrThrow(MccDBContract.TaskEntry.RESULT)
                 );
@@ -163,6 +174,7 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
         String[] projection = {
                 MccDBContract.TaskEntry._ID,
                 MccDBContract.TaskEntry.SERVER_ID,
+                MccDBContract.TaskEntry.DONE,
                 MccDBContract.TaskEntry.RESULT
         };
 

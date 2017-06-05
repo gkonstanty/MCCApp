@@ -74,22 +74,26 @@ public class ResultRequest extends AsyncTask<Task, Void, String>{
                     e.printStackTrace();
                 }
 
-                // update object (for view)
-                task.setResult(taskAnswer);
-                task.setDone(true);
+                if (!taskAnswer.equals("null")){
+
+                    // update object (for view)
+                    task.setResult(taskAnswer);
+                    task.setDone(true);
 
 
-                // update db
-                ContentValues values = new ContentValues();
-                values.put(MccDBContract.TaskEntry.RESULT, taskAnswer);
+                    // update db
+                    ContentValues values = new ContentValues();
+                    values.put(MccDBContract.TaskEntry.RESULT, taskAnswer);
+                    values.put(MccDBContract.TaskEntry.DONE, "1");
 
-                SQLiteDatabase database = new MccDBOpenHelper(context).getWritableDatabase();
+                    SQLiteDatabase database = new MccDBOpenHelper(context).getWritableDatabase();
 
-                String[] args = new String[]{String.valueOf(task.getId())};
-                database.update(
-                        MccDBContract.TaskEntry.TABLE_NAME,
-                        values,
-                        MccDBContract.TaskEntry.SERVER_ID +"=?", args);
+                    String[] args = new String[]{String.valueOf(task.getId())};
+                    database.update(
+                            MccDBContract.TaskEntry.TABLE_NAME,
+                            values,
+                            MccDBContract.TaskEntry.SERVER_ID +"=?", args);
+                }
 
 
             } catch (MalformedURLException e) {

@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar seekBarCPU;
     private EditText editTextRAM;
 
+    String taskTypeString;
+    StringBuilder taskParamsStr;
+
 
     Handler toastHandler = new Handler() {
         @Override public void handleMessage(Message msg) {
@@ -177,8 +180,11 @@ public class MainActivity extends AppCompatActivity {
 
         List<String> taskParams = new ArrayList<>();
         int taskType = (int) spinnerTasks.getSelectedItemId();
+        taskTypeString = "";
         switch (taskType){
             case 0:
+                taskTypeString = "PI";
+
                 String piPointsNoStr = String.valueOf(piPointsNo.getText());
                 taskParams.add(piPointsNoStr);
 
@@ -200,6 +206,19 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "\t" + taskParam);
         }
 
+        taskParamsStr = new StringBuilder("[");
+        for (String param: taskParams){
+
+            taskParamsStr.append(param);
+            taskParamsStr.append(",");
+        }
+
+        // delete last ","
+        if (taskParamsStr.length() > 1) {
+            taskParamsStr.setLength(taskParamsStr.length() - 1);
+        }
+
+        taskParamsStr.append("]");
 
 
         new Thread(new Runnable() {
@@ -214,8 +233,10 @@ public class MainActivity extends AppCompatActivity {
                     client.setRequestProperty("Content-Type", "application/json");
                     client.setDoOutput(true);
 
+                    String dataToSend = "{\"taskType\": \"" + taskTypeString  + "\" ,\"taskParams\": "+ taskParamsStr.toString() +" }";
+                    Log.d(TAG, "dataToSend: " + dataToSend);
                     OutputStreamWriter wr = new OutputStreamWriter(client.getOutputStream());
-                    wr.write("{\"taskType\": \"VM1\" }");
+                    wr.write(dataToSend);
                     wr.flush();
 
                     Log.d(TAG, "post response code: " + client.getResponseCode() + " ");
@@ -247,6 +268,8 @@ public class MainActivity extends AppCompatActivity {
                     ContentValues values = new ContentValues();
                     values.put(MccDBContract.TaskEntry.RESULT, "");
                     values.put(MccDBContract.TaskEntry.SERVER_ID, taskId);
+                    values.put(MccDBContract.TaskEntry.TASK_PARAMS, task.getTaskParametersString());
+                    values.put(MccDBContract.TaskEntry.WORKER_PARAMS, task.getWorkerParametersString());
 
                     long newTaskId = database.insert(MccDBContract.TaskEntry.TABLE_NAME, null, values);
 

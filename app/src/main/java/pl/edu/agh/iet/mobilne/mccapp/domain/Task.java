@@ -1,5 +1,7 @@
 package pl.edu.agh.iet.mobilne.mccapp.domain;
 
+import android.util.Log;
+
 import java.util.Map;
 
 /**
@@ -46,6 +48,19 @@ public abstract class Task {
     }
 
     public abstract String getType();
+
+    public abstract String getTaskParametersString();
+
+    public String getWorkerParametersString(){
+        StringBuilder workerParametersString = new StringBuilder();
+        for (Map.Entry<String, String> workerParam : workerParameters.entrySet()) {
+            workerParametersString.append(workerParam.getKey() + ": ");
+            workerParametersString.append(workerParam.getValue());
+            workerParametersString.append("\n");
+        }
+
+        return workerParametersString.toString();
+    }
 
     @Override
     public String toString(){

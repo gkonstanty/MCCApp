@@ -23,8 +23,14 @@ public class PiTask extends Task{
     }
 
     @Override
+    public String getTaskParametersString() {
+        return "Points amount: " + pointsNo;
+    }
+
+    @Override
     public String toString(){
         return "PiTask: " + id;
     }
+
 
 }
