@@ -1,10 +1,12 @@
 package pl.edu.agh.iet.mobilne.mccapp.rest_handlers;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,16 +31,18 @@ public class ResultRequest extends AsyncTask<Task, Void, String>{
 
     private final String TAG = "ResultRequest";
     private Context context;
+    private Activity act;
 
-    public ResultRequest(Context context){
+    public ResultRequest(Context context, Activity act){
         this.context = context;
+        this.act = act;
     }
 
 
     protected String doInBackground(Task... tasks) {
 
         String tasksAnswer = "";
-        for (Task task: tasks) {
+        for (final Task task: tasks) {
 
             HttpURLConnection client = null;
             BufferedReader reader = null;
@@ -95,6 +99,29 @@ public class ResultRequest extends AsyncTask<Task, Void, String>{
                             MccDBContract.TaskEntry.SERVER_ID +"=?", args);
                 }
 
+
+
+                final String notifyMsg = "The task " + task.getId() + "is DONE!";
+
+
+                new Thread() {
+                    public void run() {
+                        try {
+                            act.runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    Toast.makeText(context, notifyMsg, Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();

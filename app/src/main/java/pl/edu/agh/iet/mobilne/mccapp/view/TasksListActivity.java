@@ -30,7 +30,7 @@ public class TasksListActivity extends AppCompatActivity {
         ArrayList<Task> list = new ArrayList<Task>();
 
         //instantiate custom adapter
-        taskAdapter = new TaskListAdapter(list, this);
+        taskAdapter = new TaskListAdapter(list, this, TasksListActivity.this);
 
         //handle listview and assign adapter
         taskView = (ListView)findViewById(R.id.listView);

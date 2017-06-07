@@ -1,5 +1,6 @@
 package pl.edu.agh.iet.mobilne.mccapp.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,11 +33,13 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
 
     private ArrayList<Task> list = new ArrayList<Task>();
     private Context context;
+    private Activity act;
 
 
-    public TaskListAdapter(ArrayList<Task> list, Context context) {
+    public TaskListAdapter(ArrayList<Task> list, Context context, Activity act) {
         this.list = list;
         this.context = context;
+        this.act = act;
 
         refreshList();
     }
@@ -95,7 +98,7 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
                 Task task = list.get(position);
                 String result = task.getResult();
                 if (result.equals("")){
-                    new ResultRequest(context).execute(task);
+                    new ResultRequest(context, act).execute(task);
                 }
                 String toastMsg = "Result: " + result;
                 Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show();
@@ -121,7 +124,7 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
 
         taskCursor.moveToFirst();
         try {
-            while (taskCursor.moveToNext()) {
+            do {
                 Long server_id = Long.parseLong(taskCursor.getString(
                         taskCursor.getColumnIndexOrThrow(MccDBContract.TaskEntry.SERVER_ID)
                 ));
@@ -157,7 +160,7 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
                     task.setDone(isDone);
                     list.add(task);
                 }
-            }
+            } while ((taskCursor.moveToNext()));
         } finally {
             taskCursor.close();
         }

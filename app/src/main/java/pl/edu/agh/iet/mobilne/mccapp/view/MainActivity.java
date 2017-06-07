@@ -298,7 +298,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
-        new PredictRequest().execute(task);
+
+        String dataToSend = "{" +
+                "\"task_type\": \"" + taskTypeString  + "\" ,\"" +
+                // ugly hard code: every task has one and only one param
+                "task_params\": "+ taskParams.get(0) +
+                "wRAM\": "+ workerParams.get("ram") +
+                "wCPU\": "+ workerParams.get("cpus") +
+                // TODO: add to form:
+                "wIOmin\": "+ "100" +
+                "wIOmax\": "+ "3000" +
+            " }";
+
+        new PredictRequest(MainActivity.this, MainActivity.this, database, mainPredictHandler, task).execute(dataToSend);
     }
+
+
+
+    Handler mainPredictHandler = new Handler();
+
+
 
 }

@@ -13,7 +13,7 @@ public class RequestHelper {
 
 
     final static String WATCHER_IP = "http://34.253.103.15:8080";
-    final static String WATCHER_PREDICT = "predict";
+    final static String WATCHER_PREDICT = "watcher/predict";
     final static String WATCHER_PING = "pingStats";
 
 
